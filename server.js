@@ -37,6 +37,29 @@ app.get('/posts/:id', (req, res) => {
     });
 });
 
+app.post('/posts', (req, res) => {
+  const reqFields = ['title', 'content', 'author'];
+  reqFields.forEach(field => {
+    if (!(field in req.body)){
+      const message = `Missing ${field} in the request body.`;
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  });
+  
+  BlogPost
+    .create({
+      title: req.body.title,
+      content: req.body.content,
+      author: req.body.author
+    })
+    .then(blogPost => res.status(201).json(blogPost.apiRepresentation()))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ERROR: 'INTERNAL SERVER ERROR. SEEK HELP'});
+    });
+});
+
 // CATCH ALL ROUTE
 app.use('*', function(req, res) {
   res.status(404).json({message: 'Not Found'});

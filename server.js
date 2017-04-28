@@ -77,7 +77,6 @@ app.delete('/posts/:id', (req, res) => {
     .then(() => {
       let message = `Successfully deleted blog with post id of ${req.params.id}.`
       console.log(message);
-      res.json({message: message});
       res.status(204).end();
     })
     .catch(err => {
